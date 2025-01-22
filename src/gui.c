@@ -140,6 +140,8 @@ int calcCharLength(char c) {
 
 // 尝试绘制文本，从而获得最终绘制的文本数量和大小
 GUI_TypeText_Result GUI_TryTypeText(HDC hdc, char* text) {
+    static wchar_t textW[10];
+
     int count = 0;
     int width = 0; 
     
@@ -167,7 +169,9 @@ GUI_TypeText_Result GUI_TryTypeText(HDC hdc, char* text) {
 
         else {
             byteCount = calcCharLength(c);
-            GetTextExtentPoint32A(hdc, text + i, byteCount, &textSize);
+            int cTextW = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text + i, byteCount, textW, 10);
+            GetTextExtentPoint32W(hdc, textW, cTextW, &textSize);
+            
             x += textSize.cx;
             count++;
             i += byteCount;
@@ -183,6 +187,7 @@ GUI_TypeText_Result GUI_TryTypeText(HDC hdc, char* text) {
 // flags可选 GUI_CENTERX, GUI_CENTERY, GUI_LASTX, GUI_LASTY
 void GUI_TypeText(HWND hwnd, HDC hdc, int x, int y, int xMax, UINT32 flags, int interval, char* formatText, ...) {
     static char text[255];
+    static wchar_t textW[10];
     static int lastX = 0, lastY = 0;
 
     va_list ap;
@@ -227,14 +232,15 @@ void GUI_TypeText(HWND hwnd, HDC hdc, int x, int y, int xMax, UINT32 flags, int 
         }
 
         byteCount = calcCharLength(c);
-        GetTextExtentPoint32A(hdc, text + i, byteCount, &textSize);
+        int cTextW = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, text + i, byteCount, textW, 10);
+        GetTextExtentPoint32W(hdc, textW, cTextW, &textSize);
         
         if(xNow + textSize.cx > xMax) {
             xNow = x;
             yNow += textSize.cy * 5 / 4;
         }
 
-        TextOutA(hdc, xNow, yNow, text + i, byteCount);
+        TextOutW(hdc, xNow, yNow, textW, cTextW);
         InvalidateRect(hwnd, &(RECT){ xNow, yNow, xNow += textSize.cx, yNow + textSize.cy }, FALSE);
         UpdateWindow(hwnd);
         

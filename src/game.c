@@ -7,6 +7,7 @@ extern HFONT fonts[10];
 // 普通按钮的绘制函数
 void Game_NormalBtn_OnPaint(HWND hwnd, int msg) {
     static char szWindowTitle[MAX_PATH];
+    static wchar_t szWindowTitleW[MAX_PATH];
     
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hwnd, &ps);
@@ -26,8 +27,10 @@ void Game_NormalBtn_OnPaint(HWND hwnd, int msg) {
     Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
 
     GetWindowTextA(hwnd, szWindowTitle, MAX_PATH);
+    int cTextW = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, szWindowTitle, -1, szWindowTitleW, MAX_PATH);
+    
     GUI_TypeText_Result result = GUI_TryTypeText(hdc, szWindowTitle);
-    TextOutA(hdc, rect.left + (width - result.width) / 2, rect.top + (height - result.height) / 2, szWindowTitle, GetWindowTextLengthA(hwnd));
+    TextOutW(hdc, rect.left + (width - result.width) / 2, rect.top + (height - result.height) / 2, szWindowTitleW, cTextW);
 
     DeleteObject(brush);
     DeleteObject(pen);
@@ -39,6 +42,7 @@ void Game_NormalBtn_OnPaint(HWND hwnd, int msg) {
 // 对话选择按钮的绘制函数
 void Game_ChoiceBtn_OnPaint(HWND hwnd, int msg) {
     static char szWindowTitle[MAX_PATH];
+    static wchar_t szWindowTitleW[MAX_PATH];
     
     PAINTSTRUCT ps;
     HDC hdc = BeginPaint(hwnd, &ps);
@@ -61,7 +65,9 @@ void Game_ChoiceBtn_OnPaint(HWND hwnd, int msg) {
      }, 4);
 
     GetWindowTextA(hwnd, szWindowTitle, MAX_PATH);
-    TextOutA(hdc, rect.left + width * 2 / 15, rect.top + height * 2 / 10, szWindowTitle, GetWindowTextLengthA(hwnd));
+    int cTextW = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, szWindowTitle, -1, szWindowTitleW, MAX_PATH);
+
+    TextOutW(hdc, rect.left + width * 2 / 15, rect.top + height * 2 / 10, szWindowTitleW, cTextW);
 
     DeleteObject(brush);
     ReleaseDC(hwnd, hdc);
