@@ -11,7 +11,7 @@
 
 2. 新建一个空文件目录 (文件路径中最好不要带 中文 / 空格 )
 
-3. 从 [Releases](https://github.com/SyrieYume/Eternal_City_Demo/releases/latest) 下载项目的源代码部分 `soource.zip`，解压到上述文件目录下
+3. 从 [Releases](https://github.com/SyrieYume/Eternal_City_Demo/releases/latest) 下载项目的源代码部分 `sources.zip`，解压到上述文件目录下
 
 4. 从 [Releases](https://github.com/SyrieYume/Eternal_City_Demo/releases/latest) 下载项目的资源文件部分 `res.zip`，并解压到上述文件目录下的 `res` 文件夹中
 
